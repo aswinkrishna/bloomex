@@ -42,8 +42,8 @@
                       </table>
                       <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-end">
-                          <li class="page-item" v-for="(pagination, key) in pagination" :key="key">
-                            <button class="page-link" :class="(currentPage === pagination.label) ? 'active': ''" @click="loadData(pagination.label)" v-html="pagination.label"></button>
+                          <li class="page-item" :class="(pagination.active) ? 'active': ''" v-for="(pagination, key) in pagination" :key="key">
+                            <button class="page-link" @click="loadData(pagination.label, pagination.url)" v-html="pagination.label"></button>
                           </li>
                         </ul>
                       </nav>
@@ -64,13 +64,14 @@
         search: "",
         items: [],
         pagination: [],
-        currentPage: 1,
       }
     },
     methods: {
-      loadData(page = 1) {
-        this.currentPage = page;
-        axios.get(`/api/issues/list?page=${page}&search=${this.search}`)
+      loadData(page = 1, url = null) {
+        if (url == null) {
+          url = '/api/issues/list?page=1';
+        }
+        axios.get(`${url}&search=${this.search}`)
           .then(response => {
             this.items = response.data.data;
             this.pagination = response.data.links;
