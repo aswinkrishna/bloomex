@@ -11,6 +11,7 @@ const router = createRouter({
     routes: [
         { path: '/', component: List },
         { path: '/create', component: Add },
+        { path: '/edit/:id', component: Add },
     ]
 });
 
