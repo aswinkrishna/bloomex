@@ -40,7 +40,13 @@
                           </tr>
                         </tbody>
                       </table>
-                      <pagination :data="items" @pagination-change-page="loadData"></pagination>
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                          <li class="page-item" v-for="(pagination, key) in pagination" :key="key">
+                            <button class="page-link" :class="(currentPage === pagination.label) ? 'active': ''" @click="loadData(pagination.label)" v-html="pagination.label"></button>
+                          </li>
+                        </ul>
+                      </nav>
                     </div>
                 </div>
 
@@ -49,7 +55,6 @@
   </template>
 
   <script>
-  import 'datatables.net';
   import $ from 'jquery';
   import axios from 'axios';
 
@@ -58,17 +63,17 @@
       return {
         search: "",
         items: [],
+        pagination: [],
+        currentPage: 1,
       }
     },
     methods: {
-      redirectToEdit(id) {
-        alert("sd");
-        this.$router.push({ path: `edit/${id}` });
-      },
       loadData(page = 1) {
+        this.currentPage = page;
         axios.get(`/api/issues/list?page=${page}&search=${this.search}`)
           .then(response => {
             this.items = response.data.data;
+            this.pagination = response.data.links;
           })
           .catch(error => {
             console.error('Error fetching data:', error);

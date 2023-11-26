@@ -32,7 +32,7 @@ class IssueService
         return $issues::when(request('search'), function ($query) {
             $query->where('subject', 'like', '%' . request('search') . '%');
             $query->orWhere('description', 'like', '%' . request('search') . '%');
-        }) ->paginate(10);
+        }) ->paginate(5);
     }
 
     /**
